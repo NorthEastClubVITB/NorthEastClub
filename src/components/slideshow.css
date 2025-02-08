@@ -1,0 +1,89 @@
+.slideshow-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+  overflow: hidden;
+}
+
+.slide {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slide-image {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.text-overlay {
+  position: absolute;
+  bottom: 10%;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.dots {
+  text-align: center;
+  padding: 10px;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  margin: 5px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+.des{
+  color: rgb(233, 233, 233);
+  
+}
+.dot.active {
+  background-color: #717171;
+}
+
+body, html {
+  height: 100%;
+  margin: 0;
+  overflow-y: auto;
+}
+
+.home {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.slideshow-container {
+  max-width: 800px;
+  width: 100%;
+  margin-bottom: 50px;
+}
+.slideshow-container {
+  position: relative;
+  width: 90vw; /* Full viewport width */
+  max-width: 100%; /* Ensures it takes the full width */
+  margin: auto;
+  text-align: center;
+  overflow: hidden;
+}
+
+.slide-image {
+  width: 90vw; /* Ensures image covers full width */
+  max-height: 450px;
+  object-fit: cover;
+  border-radius: 0; /* Optional: remove rounded edges */
+}
