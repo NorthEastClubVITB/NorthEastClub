@@ -44,7 +44,7 @@ const ImageCarousel = ({ images }) => {
     <div className="upcoming">
       <img 
         src={images[currentIndex]} 
-        alt={`Image ${currentIndex + 1}`} 
+        alt="" 
         className="upcoming-image"
       />
       <button 
@@ -75,11 +75,7 @@ const ImageCarousel = ({ images }) => {
 
 const Events = () => {
   // Function to chunk array into groups of 3
-  const chunkArray = (arr, size) => {
-    return Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
-      arr.slice(i * size, i * size + size)
-    );
-  };
+  
 
   return (
     <div className="events-container">
