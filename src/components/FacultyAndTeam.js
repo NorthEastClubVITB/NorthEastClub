@@ -27,12 +27,12 @@ const FacultyAndTeam = () => {
     { name: 'Bindupautra Jyotibrat', role: 'Technical Team Lead', image: bindu },
     { name: 'Vashika Gupta ', role: 'Event Management Team Lead ', image: vasika },
     { name: 'Kaustav Kalita', role: 'Social Media Team Lead', image: kosutav},
-    { name: 'Eipshita Basuli ', role: 'Lead Cultural team', image: Episita},
+    { name: 'Eipshita Basuli ', role: 'Cultural team Lead ', image: Episita},
     { name: 'Arunim Gogoi', role: 'PR Team Lead', image: Arunim},
     { name: 'Rana Talukdar', role: 'Technical team Co-lead ', image: Rana },
     { name: 'Ayush Prajapati ', role: 'Event Management Team Co-Lead', image: Ayush },
     { name: 'Armaan Das ', role: 'Social Media Team Co-Lead', image: Arman},
-    { name: 'Jooman Kishor Lahkar ', role: 'PR Lead CO-Lead', image:Jooman},
+    { name: 'Jooman Kishor Lahkar ', role: 'PR Team CO-Lead', image:Jooman},
     
   ];
   const founders=[
