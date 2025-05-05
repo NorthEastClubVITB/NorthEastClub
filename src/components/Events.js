@@ -7,9 +7,19 @@ import inugu2 from '../images/events/WhatsApp Image 2025-02-07 at 11.28.01 PM.jp
 import latent from '../images/events/WhatsApp Image 2025-02-07 at 11.31.29 PM.jpeg'
 import latent1 from '../images/events/WhatsApp Image 2025-02-07 at 11.32.29 PM.jpeg'
 import inu from '../images/events/kmda.jpeg'
+import toh1 from '../images/events/toh1.jpg'
+import toh2 from '../images/events/toh2.jpg'
+import toh3 from '../images/events/toh3.jpg'
 
 
 const pastEvents = [
+  {
+    title: "NorthEast Club inauguration",
+    date: "May 2024",
+    images: [inu,inugu2,
+      inuguration1
+    ]
+  },
   {
     title: "Uncensored Show",
     date: "Dec 2024",
@@ -18,15 +28,11 @@ const pastEvents = [
     ]
   },
   {
-    title: "NorthEast Club inauguration",
-    date: "May 2024",
-    images: [inu,inugu2,
-      inuguration1
-      
-    ]
+    title: "Threads of Heritage",
+    date: "Feb 2025",
+    images: [toh1, toh2, toh3]
   }
 ];
-
 
 
 const ImageCarousel = ({ images }) => {
