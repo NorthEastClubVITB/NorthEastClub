@@ -15,31 +15,37 @@ import founder from '../images/founders/dickshit.jpeg'
 import founder2 from '../images/founders/WhatsApp Image 2025-02-08 at 7.27.11 PM.jpeg'
 import arnab from '../images/founders/Arnab.png'
 import facultyy from '../images/Team/professor.png'
+import bidhi from '../images/Team/bidhi.jpg'
+import mahi from '../images/Team/mahi.jpg'
+import aakash from '../images/Team/aakash.jpg'
 
 const FacultyAndTeam = () => {
   const facultyMembers = [
-    { name: 'Dr. Subrata Nath', position: 'Faculty Coordinator', image:faculty},
     { name: 'Dr. Shafiul Alom Ahmed', position: 'Faculty Coordinator', image: facultyy},
+    { name: 'Dr. Subrata Nath', position: 'Faculty Co-Coordinator', image:faculty},
   ];
 
   const teamMembers = [
     { name: 'Roshni Sharma', role: 'President', image: roshni },
+    { name: 'Aakash Lalwani', role: 'Vice President', image: aakash },
+    { name: 'Mahijith Chaudhary', role: 'Secretary', image: mahi },
     { name: 'Bindupautra Jyotibrat', role: 'Technical Team Lead', image: bindu },
     { name: 'Vashika Gupta ', role: 'Event Management Team Lead ', image: vasika },
     { name: 'Kaustav Kalita', role: 'Social Media Team Lead', image: kosutav},
-    { name: 'Eipshita Basuli ', role: 'Cultural team Lead ', image: Episita},
     { name: 'Arunim Gogoi', role: 'PR Team Lead', image: Arunim},
-    { name: 'Rana Talukdar', role: 'Technical team Co-lead ', image: Rana },
+    { name: 'Bidhi Sharma', role: 'Cultural Team Lead ', image: bidhi},
+    { name: 'Rana Talukdar', role: 'Technical Team Co-lead ', image: Rana },
     { name: 'Ayush Prajapati ', role: 'Event Management Team Co-Lead', image: Ayush },
     { name: 'Armaan Das ', role: 'Social Media Team Co-Lead', image: Arman},
-    { name: 'Jooman Kishor Lahkar ', role: 'PR Team CO-Lead', image:Jooman},
+    { name: 'Jooman Kishor Lahkar ', role: 'PR Team Co-Lead', image:Jooman},
+    { name: 'Eipshita Basuli ', role: 'Cultural Team Co-Lead', image: Episita},
     
   ];
   const founders=[
     {name:'Roshni Sharma ',image:roshni},
     {name :'Saumadipta Chatterjee',image:founder2},
     {name:'Deekshit Kashyap',image:founder},
-        {name:'Arnab Jyoti Borah',image:arnab}
+    {name:'Arnab Jyoti Borah',image:arnab}
 
   ]
 
