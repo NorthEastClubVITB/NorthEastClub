@@ -18,6 +18,7 @@ import facultyy from '../images/Team/professor.png'
 import bidhi from '../images/Team/bidhi.jpg'
 import mahi from '../images/Team/mahi.jpg'
 import aakash from '../images/Team/aakash.jpg'
+import shiv from '../images/Team/shiv.jpg'
 
 const FacultyAndTeam = () => {
   const facultyMembers = [
@@ -76,17 +77,17 @@ const FacultyAndTeam = () => {
           ))}
         </div>
       </div>
-      <div className="team-members">
-        <h2>Founding Members</h2>
-        <div className="team-grid">
-          {founders.map((team, index) => (
-            <div className="team-card" key={index}>
-              <img className="profile-img" src={team.image} alt={team.name} />
-              <h3>{team.name}</h3>
-              <p>{team.role}</p>
-            </div>
-          ))}
-        </div>
+      // <div className="team-members">
+      //   <h2>Founding Members</h2>
+      //   <div className="team-grid">
+      //     {founders.map((team, index) => (
+      //       <div className="team-card" key={index}>
+      //         <img className="profile-img" src={team.image} alt={team.name} />
+      //         <h3>{team.name}</h3>
+      //         <p>{team.role}</p>
+      //       </div>
+      //     ))}
+      //   </div>
       </div>
     </div>
   );
