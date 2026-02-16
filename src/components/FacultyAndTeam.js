@@ -40,6 +40,7 @@ const FacultyAndTeam = () => {
     { name: 'Armaan Das ', role: 'Social Media Team Co-Lead', image: Arman},
     { name: 'Jooman Kishor Lahkar ', role: 'PR Team Co-Lead', image:Jooman},
     { name: 'Eipshita Basuli ', role: 'Cultural Team Co-Lead', image: Episita},
+    { name: 'Shiv Narayan Prasad ', role: 'Design Team Lead', image: shiv},
     
   ];
   const founders=[
