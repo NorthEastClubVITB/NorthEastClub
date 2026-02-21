@@ -1,21 +1,22 @@
 import React from 'react';
 import './FacultyAndTeam.css';
 import roshni from '../images/Team/roshni.jpg'
+import Rupankita from '../img_core/PXL_20251219_084039300~2 - Rupankita Baruah 24BAI10975.jpg'
 import bindu from '../images/Team/bindu.jpg'
-import vasika from '../images/Team/vashika.jpg'
-import kosutav from '../images/Team/WhatsApp Image 2025-02-07 at 11.26.36 PM.jpeg'
+
+import kosutav from '../images/Team/Kaustav.jpeg'
 import Arunim from '../images/Team/My_photo - Arunim Gogoi 23BAI11381.jpg'
-import Rana from '../images/Team/IMG_20250207_184213 - Rana Talukdar 23bai10186.jpg'
+import Rana from '../images/Team/Rana.jpeg'
 import Ayush from '../images/Team/pic for id card - Rex Patel.jpg'
-import Arman from '../images/Team/PFP - ARMAAN DAS 24BSA10097.jpg'
-import Jooman from '../images/Team/JK - Jooman Kishor Lahkar 23bec10052.jpg'
+import Pratham from '../images/Team/Pratham.jpeg'
+import Jooman from '../images/Team/Jumon.jpeg'
 import Episita from '../images/Team/IMG_4458_Original - Eipshita Basuli.jpeg'
 import faculty from '../images/Team/faculty.png'
 import founder from '../images/founders/dickshit.jpeg'
 import founder2 from '../images/founders/WhatsApp Image 2025-02-08 at 7.27.11 PM.jpeg'
 import arnab from '../images/founders/Arnab.png'
 import facultyy from '../images/Team/professor.png'
-import bidhi from '../images/Team/bidhi.jpg'
+
 import mahi from '../images/Team/mahi.jpg'
 import aakash from '../images/Team/aakash.jpg'
 
@@ -26,19 +27,20 @@ const FacultyAndTeam = () => {
   ];
 
   const teamMembers = [
-    { name: 'Roshni Sharma', role: 'President', image: roshni },
-    { name: 'Aakash Lalwani', role: 'Vice President', image: aakash },
-    { name: 'Mahijith Chaudhary', role: 'Secretary', image: mahi },
+    //{ name: 'Roshni Sharma', role: 'President', image: roshni },
+    { name: 'Aakash Lalwani', role: 'Co-ordinator', image: aakash },
+    { name: 'Mahijith Chowdhury', role: 'Secretary', image: mahi },
     { name: 'Bindupautra Jyotibrat', role: 'Technical Team Lead', image: bindu },
-    { name: 'Vashika Gupta ', role: 'Event Management Team Lead ', image: vasika },
+    //{ name: 'Vashika Gupta ', role: 'Event Management Team Lead ', image: vasika },
     { name: 'Kaustav Kalita', role: 'Social Media Team Lead', image: kosutav},
     { name: 'Arunim Gogoi', role: 'PR Team Lead', image: Arunim},
-    { name: 'Bidhi Sharma', role: 'Cultural Team Lead ', image: bidhi},
+    //{ name: 'Bidhi Sharma', role: 'Cultural Team Lead ', image: bidhi},
     { name: 'Rana Talukdar', role: 'Technical Team Co-lead ', image: Rana },
-    { name: 'Ayush Prajapati ', role: 'Event Management Team Co-Lead', image: Ayush },
-    { name: 'Armaan Das ', role: 'Social Media Team Co-Lead', image: Arman},
+    { name: 'Ayush Prajapati ', role: 'Event Management Team Lead', image: Ayush },
+    { name: 'Pratham Shah', role: 'Social Media Team Co-Lead', image: Pratham},
     { name: 'Jooman Kishor Lahkar ', role: 'PR Team Co-Lead', image:Jooman},
-    { name: 'Eipshita Basuli ', role: 'Cultural Team Co-Lead', image: Episita},
+    { name: 'Eipshita Basuli ', role: 'Cultural Team', image: Episita},
+    { name: 'Rupankita Baruah', role: 'Cultural Team Co-Lead', image: Rupankita},
     
   ];
   const founders=[
@@ -65,7 +67,7 @@ const FacultyAndTeam = () => {
       </div>
 
       <div className="team-members">
-        <h2>Team Members</h2>
+        <h2>Departmental Leads</h2>
         <div className="team-grid">
           {teamMembers.map((team, index) => (
             <div className="team-card" key={index}>
@@ -76,7 +78,7 @@ const FacultyAndTeam = () => {
           ))}
         </div>
       </div>
-      <div className="team-members">
+      {/* <div className="team-members">
         <h2>Founding Members</h2>
         <div className="team-grid">
           {founders.map((team, index) => (
@@ -87,7 +89,7 @@ const FacultyAndTeam = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
