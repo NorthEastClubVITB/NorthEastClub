@@ -18,17 +18,12 @@ const CommentsSection = ({ eventId, eventColor, testimonials = [] }) => {
 
     const fetchComments = async () => {
         try {
-            setLoading(true);
             const response = await fetch(`${API_URL}/${eventId}`);
             if (!response.ok) throw new Error('Failed to fetch');
             const data = await response.json();
             setComments(data.comments || []);
-            setError(null);
         } catch (err) {
             console.error('Fetch error:', err);
-            setError('Waiting for connection...');
-        } finally {
-            setLoading(false);
         }
     };
 
