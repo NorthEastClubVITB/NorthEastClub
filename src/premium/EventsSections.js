@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Camera, MapPin, Users, Clock, Quote } from 'lucide-react';
-import { EventCard, MomentCard, MemoryCard, GrainOverlay } from './EventsShared';
+import { Camera, MapPin, Users, Clock } from 'lucide-react';
+import { EventCard, GrainOverlay } from './EventsShared';
 import { useOptimizedImage } from './useOptimizedImage';
 import CommentsSection from './CommentsSection';
 import CapturedMoments3D from './CapturedMoments3D';
@@ -203,7 +203,6 @@ function ScrollReveal({ children, style = {}, delay = 0 }) {
 // ========== DYNAMIC AMBIENT LIGHTBOX ==========
 function MomentLightbox({ moment, onClose, event }) {
     const isVideo = moment.type === 'video';
-    const videoRef = React.useRef(null);
 
     // Close on escape
     useEffect(() => {

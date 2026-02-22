@@ -4,17 +4,16 @@ import { ReviewsCarousel } from './EventsSections';
 
 const CommentsSection = ({ eventId, eventColor, testimonials = [] }) => {
     const [comments, setComments] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [name, setName] = useState('');
     const [text, setText] = useState('');
     const [submitting, setSubmitting] = useState(false);
-    const [error, setError] = useState(null);
 
     const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
     const API_URL = baseUrl.endsWith('/comments') ? baseUrl : `${baseUrl}/comments`;
 
     useEffect(() => {
         fetchComments();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventId]);
 
     const fetchComments = async () => {

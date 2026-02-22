@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { eventsData, eventTypeMap } from './eventsData';
 import { EventDetailPage } from './EventsSections';

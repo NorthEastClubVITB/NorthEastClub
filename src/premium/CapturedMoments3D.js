@@ -30,8 +30,6 @@ const SHAPE_PATTERN = [
 
 const ACTIVE_FLEX = 3.2;
 const ACTIVE_BR = '14px';
-const GAP = 7;
-
 
 // ========== SINGLE CARD ==========
 const MomentCard = React.memo(function MomentCard({
