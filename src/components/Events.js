@@ -2,35 +2,40 @@ import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './events.css';
 import UpcomingEvents from './UpcomingEvents';
-import inuguration1 from '../images/events/WhatsApp Image 2025-02-07 at 11.28.01 PM (1).jpeg'
-import inugu2 from '../images/events/WhatsApp Image 2025-02-07 at 11.28.01 PM.jpeg'
-import latent from '../images/events/WhatsApp Image 2025-02-07 at 11.31.29 PM.jpeg'
-import latent1 from '../images/events/WhatsApp Image 2025-02-07 at 11.32.29 PM.jpeg'
-import inu from '../images/events/kmda.jpeg'
-import toh1 from '../images/events/toh1.jpg'
-import toh2 from '../images/events/toh2.jpg'
-import toh3 from '../images/events/toh3.jpg'
 
+// ============ CLOUDINARY CONFIGURATION ============
+const CLOUD_NAME = 'dambyonbn';
+const getCloudinaryUrl = (folder, filename) => {
+  const normalized = filename.replace(/[\s()]/g, '_');
+  return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto/v1/events/${folder}/${normalized}`;
+};
 
 const pastEvents = [
   {
     title: "NorthEast Club inauguration",
     date: "May 2024",
-    images: [inu,inugu2,
-      inuguration1
+    images: [
+      getCloudinaryUrl('inaug', 'kmda.jpeg'),
+      getCloudinaryUrl('inaug', 'WhatsApp Image 2026-02-09 at 10.32.54 PM.jpeg'),
+      getCloudinaryUrl('inaug', 'WhatsApp Image 2025-02-07 at 11.28.01 PM (1).jpeg')
     ]
   },
   {
     title: "Uncensored Show",
     date: "Dec 2024",
     images: [
-      latent,latent1
+      getCloudinaryUrl('Uncensored', 'WhatsApp Image 2025-02-07 at 11.31.29 PM.jpeg'),
+      getCloudinaryUrl('Uncensored', 'WhatsApp Image 2025-02-07 at 11.32.29 PM.jpeg')
     ]
   },
   {
     title: "Threads of Heritage",
     date: "Feb 2025",
-    images: [toh1, toh2, toh3]
+    images: [
+      getCloudinaryUrl('Threads_of_herit_1', 'toh1.jpg'),
+      getCloudinaryUrl('Threads_of_herit_1', 'toh2.jpg'),
+      getCloudinaryUrl('Threads_of_herit_1', 'toh3.jpg')
+    ]
   }
 ];
 
@@ -48,19 +53,19 @@ const ImageCarousel = ({ images }) => {
 
   return (
     <div className="upcoming">
-      <img 
-        src={images[currentIndex]} 
-        alt="" 
+      <img
+        src={images[currentIndex]}
+        alt=""
         className="upcoming-image"
       />
-      <button 
+      <button
         onClick={previousImage}
         className="button_prev"
         aria-label="Previous image"
       >
         <ChevronLeft size={20} />
       </button>
-      <button 
+      <button
         onClick={nextImage}
         className="button_next"
         aria-label="Next image"
@@ -81,12 +86,12 @@ const ImageCarousel = ({ images }) => {
 
 const Events = () => {
   // Function to chunk array into groups of 3
-  
+
 
   return (
     <div className="events-container">
 
-      <UpcomingEvents/>
+      <UpcomingEvents />
 
       <h2 className="section-title">Events Timeline</h2>
       <div className="events-grid">
