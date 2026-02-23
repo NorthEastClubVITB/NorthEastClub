@@ -13,7 +13,7 @@ import ExploreVoyage from './premium/ExploreVoyage';
 
 function App() {
   const location = useLocation();
-  const hideNavBarPaths = ['/events', '/explore-threads', '/explore-inauguration', '/explore-uncensored'];
+  const hideNavBarPaths = ['/explore-threads', '/explore-inauguration', '/explore-uncensored'];
   const shouldHideNavBar = hideNavBarPaths.includes(location.pathname);
 
   return (

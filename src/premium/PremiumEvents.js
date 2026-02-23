@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Camera } from 'lucide-react';
+import { Camera, ChevronUp } from 'lucide-react';
 import { eventsData } from './eventsData';
 import { GrainOverlay, HeroSection, FeaturedCarousel } from './EventsShared';
 import { MomentsCarousel, TimelineSection, CapturedMomentsGrid, EventDetailPage, ReviewsCarousel } from './EventsSections';
@@ -11,7 +11,9 @@ const PremiumEvents = () => {
     const [activeMomentIndex, setActiveMomentIndex] = useState(0);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [activeTimelineCard, setActiveTimelineCard] = useState(0);
+    const [showScrollTop, setShowScrollTop] = useState(false);
     const timelineRef = useRef(null);
+    const scrollTimer = useRef(null);
 
     // List of folders to fetch media from
     const folders = useMemo(() => ['Threads_of_herit_1', 'Uncensored', 'inaug'], []);
@@ -68,10 +70,25 @@ const PremiumEvents = () => {
                     }
                 });
             }
+
+            // Scroll-to-top button logic
+            const currentScroll = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+            setShowScrollTop(false);
+            if (scrollTimer.current) {
+                clearTimeout(scrollTimer.current);
+            }
+            scrollTimer.current = setTimeout(() => {
+                if (currentScroll > 400) {
+                    setShowScrollTop(true);
+                }
+            }, 600);
         };
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, true); // Use capture to catch events on scrolling elements
         handleScroll();
-        return () => window.removeEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll, true);
+            if (scrollTimer.current) clearTimeout(scrollTimer.current);
+        };
     }, []);
 
     useEffect(() => {
@@ -140,8 +157,16 @@ const PremiumEvents = () => {
             />
 
             {mediaLoading ? (
-                <div style={{ height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#09173d' }}>
-                    <div className="premium-loader">Reliving Memories...</div>
+                <div className="premium-loader-container">
+                    <div className="premium-loader-content">
+                        <div className="loader-ring">
+                            <div className="loader-ring-inner"></div>
+                        </div>
+                        <div className="loader-text">
+                            <span className="loader-text-main">Reliving Memories</span>
+                            <span className="loader-text-sub">Please wait while we curate your experience</span>
+                        </div>
+                    </div>
                 </div>
             ) : (
                 <>
@@ -201,18 +226,128 @@ const PremiumEvents = () => {
                 </p>
             </div>
             <style>{`
-                .premium-loader {
-                    font-family: 'Playfair Display', serif;
-                    font-style: italic;
-                    font-size: 1.5rem;
-                    animation: pulse 2s infinite;
+                .premium-loader-container {
+                    height: 60vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #09173d;
+                    position: relative;
+                    z-index: 10;
                 }
-                @keyframes pulse {
-                    0% { opacity: 0.5; }
-                    50% { opacity: 1; }
-                    100% { opacity: 0.5; }
+                .premium-loader-content {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 2rem;
+                    animation: fadeInLoader 1s ease-out;
+                }
+                .loader-ring {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    padding: 3px;
+                    background: conic-gradient(from 0deg, transparent 0%, #09173d 100%);
+                    animation: spin 1.5s linear infinite;
+                    position: relative;
+                }
+                .loader-ring-inner {
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(255, 255, 255, 0.3);
+                    backdrop-filter: blur(10px);
+                    border-radius: 50%;
+                }
+                .loader-text {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 0.5rem;
+                    text-align: center;
+                }
+                .loader-text-main {
+                    font-family: 'Playfair Display', serif;
+                    font-size: clamp(1.2rem, 3vw, 1.8rem);
+                    font-style: italic;
+                    letter-spacing: 0.1em;
+                    color: #09173d;
+                }
+                .loader-text-sub {
+                    font-family: 'Crimson Text', serif;
+                    font-size: clamp(0.8rem, 2vw, 0.95rem);
+                    opacity: 0.6;
+                    letter-spacing: 0.05em;
+                }
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+                @keyframes fadeInLoader {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+
+                .premium-scroll-top {
+                    position: fixed;
+                    bottom: clamp(1.5rem, 5vw, 2.5rem);
+                    right: clamp(1.5rem, 5vw, 2.5rem);
+                    width: clamp(3rem, 8vw, 3.5rem);
+                    height: clamp(3rem, 8vw, 3.5rem);
+                    background: #09173d;
+                    color: white;
+                    border: none;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    z-index: 1000;
+                    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    box-shadow: 0 4px 0 #000, 0 8px 15px rgba(0,0,0,0.3);
+                    opacity: 0;
+                    transform: translateY(30px) scale(0.5);
+                    pointer-events: none;
+                    outline: none;
+                }
+
+                .premium-scroll-top.visible {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                    pointer-events: auto;
+                }
+
+                .premium-scroll-top:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 9px 0 #000, 0 15px 20px rgba(0,0,0,0.4);
+                    background: #0d215c;
+                }
+
+                .premium-scroll-top:active {
+                    transform: translateY(2px);
+                    box-shadow: 0 2px 0 #000, 0 5px 10px rgba(0,0,0,0.2);
+                    transition: all 0.1s;
+                }
+
+                @media (max-width: 480px) {
+                    .premium-scroll-top {
+                        bottom: 1.25rem;
+                        right: 1.25rem;
+                        width: 2.75rem;
+                        height: 2.75rem;
+                    }
                 }
             `}</style>
+            <button
+                className={`premium-scroll-top ${showScrollTop ? 'visible' : ''}`}
+                onClick={() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    if (document.body.scrollTop > 0) document.body.scrollTo({ top: 0, behavior: 'smooth' });
+                    if (document.documentElement.scrollTop > 0) document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                aria-label="Scroll to top"
+            >
+                <ChevronUp size={24} />
+            </button>
         </div>
     );
 };
