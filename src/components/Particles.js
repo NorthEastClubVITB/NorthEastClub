@@ -20,7 +20,6 @@ const ParticlesComponent = (props) => {
         color: {
           value: "#ffffff",
         },
-        image: "linear-gradient(90deg,rgb(255, 255, 255),rgb(227, 239, 255))",
         position: "50% 50%",
         repeat: "no-repeat",
         size: "cover",
@@ -49,10 +48,10 @@ const ParticlesComponent = (props) => {
       },
       particles: {
         color: {
-          value: "#2c3170",
+          value: "#09173d",
         },
         links: {
-          color: "#2c3170",
+          color: "#09173d",
           distance: 150,
           enable: true,
           opacity: 0.3,

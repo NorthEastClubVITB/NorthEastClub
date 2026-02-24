@@ -4,7 +4,6 @@ import { Menu, X } from 'lucide-react';
 import logo from '../images/logo.png';
 import { Link } from "react-router-dom";
 
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -14,15 +13,14 @@ const Navbar = () => {
         <div className="nav-content">
           <div className="logo">
             <Link to="/">
-            <img src={logo} alt="Logo" />
+              <img src={logo} alt="Logo" />
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="desktop-menu">
-            <a href="#events">Events</a>
+            <Link to="/events">Events</Link>
             <Link to="/team">Our Team</Link>
-            {/* <a href="#team">Leads</a> */}
           </div>
 
           {/* Mobile Menu Button */}
@@ -34,11 +32,9 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {isOpen && (
           <div className="mobile-menu">
-            <a href="#events" onClick={() => setIsOpen(false)}>Events</a>
-            {/* <a href="#team" onClick={() => setIsOpen(false)}>Leads</a> */}
-            <a href="#aim" onClick={() => setIsOpen(false)}>Aim</a>
+            <Link to="/events" onClick={() => setIsOpen(false)}>Events</Link>
             <Link to="/team" onClick={() => setIsOpen(false)}>Our Team</Link>
-
+            <a href="/#aim" onClick={() => setIsOpen(false)}>Aim</a>
           </div>
         )}
       </div>

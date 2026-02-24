@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import './App.css';
 import NavBar from './components/NavBar';
 import Home from './components/Home';
@@ -9,13 +9,20 @@ import Footer from './components/Footer';
 import ParticlesComponent from './components/Particles';
 import Team from './components/Team';
 
-function Layout({ children }) {
+import PremiumEvents from './premium/PremiumEvents';
+import ExploreVoyage from './premium/ExploreVoyage';
+
+function Layout({ children, hideFooter }) {
+  const location = useLocation();
+  const hideNavBarPaths = ['/explore-threads', '/explore-inauguration', '/explore-uncensored'];
+  const shouldHideNavBar = hideNavBarPaths.includes(location.pathname);
+
   return (
     <div className='App'>
       <ParticlesComponent id="particles" />
-      <NavBar />
+      {!shouldHideNavBar && <NavBar />}
       {children}
-      <Footer />
+      {!hideFooter && <Footer />}
     </div>
   );
 }
@@ -23,7 +30,6 @@ function Layout({ children }) {
 function App() {
   return (
     <Routes>
-      {/* Home Page */}
       <Route
         path="/"
         element={
@@ -41,7 +47,6 @@ function App() {
         }
       />
 
-      {/* Team Page */}
       <Route
         path="/team"
         element={
@@ -50,6 +55,11 @@ function App() {
           </Layout>
         }
       />
+
+      <Route path="/events" element={<Layout hideFooter><PremiumEvents /></Layout>} />
+      <Route path="/explore-threads" element={<Layout hideFooter><ExploreVoyage eventType="threads" /></Layout>} />
+      <Route path="/explore-inauguration" element={<Layout hideFooter><ExploreVoyage eventType="inauguration" /></Layout>} />
+      <Route path="/explore-uncensored" element={<Layout hideFooter><ExploreVoyage eventType="uncensored" /></Layout>} />
     </Routes>
   );
 }
