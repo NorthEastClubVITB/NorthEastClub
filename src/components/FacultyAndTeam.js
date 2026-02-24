@@ -1,6 +1,6 @@
 import React from 'react';
 import './FacultyAndTeam.css';
-import roshni from '../images/Team/roshni.jpg'
+// import roshni from '../images/Team/roshni.jpg'
 import Rupankita from '../img_core/PXL_20251219_084039300~2 - Rupankita Baruah 24BAI10975.jpg'
 import bindu from '../images/Team/bindu.jpg'
 
@@ -12,9 +12,9 @@ import Pratham from '../images/Team/Pratham.jpeg'
 import Jooman from '../images/Team/Jumon.jpeg'
 import Episita from '../images/Team/IMG_4458_Original - Eipshita Basuli.jpeg'
 import faculty from '../images/Team/faculty.png'
-import founder from '../images/founders/dickshit.jpeg'
-import founder2 from '../images/founders/WhatsApp Image 2025-02-08 at 7.27.11 PM.jpeg'
-import arnab from '../images/founders/Arnab.png'
+// import founder from '../images/founders/dickshit.jpeg'
+// import founder2 from '../images/founders/WhatsApp Image 2025-02-08 at 7.27.11 PM.jpeg'
+// import arnab from '../images/founders/Arnab.png'
 import facultyy from '../images/Team/professor.png'
 
 import mahi from '../images/Team/mahi.jpg'
