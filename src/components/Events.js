@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Camera } from "lucide-react";
 import "./events.css";
@@ -113,12 +113,13 @@ export default function Events() {
       { threshold: 0.05 } // Trigger when 5% visible for better reliability
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const node = sectionRef.current;
+    if (node) {
+      observer.observe(node);
     }
 
     return () => {
-      if (sectionRef.current) observer.unobserve(sectionRef.current);
+      if (node) observer.unobserve(node);
       observer.disconnect();
     };
   }, []);
@@ -282,7 +283,6 @@ export default function Events() {
 
   const activeVirtual = Math.round(display);
   const activeCardIndex = ((activeVirtual % N) + N) % N;
-  const labelPad = widths.sliver + GAP;
 
   return (
     <div className="events-container" ref={sectionRef}>
