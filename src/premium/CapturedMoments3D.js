@@ -35,12 +35,15 @@ const ACTIVE_BR = '14px';
 const MomentCard = React.memo(function MomentCard({
     item, index, isActive, shapeConfig, labelVisible, onClick, eventColor
 }) {
+    const [hasError, setHasError] = useState(false);
     const isVideo = item.type === 'video';
     const displaySrc = item.thumbnail || item.src;
     const optimized = useOptimizedImage(!isVideo ? displaySrc : null, 450, 500, 0.65, false);
 
     const flexVal = isActive ? ACTIVE_FLEX : shapeConfig.flex;
     const br = isActive ? ACTIVE_BR : shapeConfig.br;
+
+    if (hasError) return <div style={{ display: 'none' }} />;
 
     return (
         <div
@@ -53,10 +56,10 @@ const MomentCard = React.memo(function MomentCard({
                 overflow: 'hidden',
                 cursor: 'pointer',
                 transition: [
-                    'flex 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                    'border-radius 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                    'box-shadow 0.4s ease-out',
-                    'transform 0.4s ease-out'
+                    'flex 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                    'border-radius 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                    'box-shadow 0.6s ease-out',
+                    'transform 0.6s ease-out'
                 ].join(', '),
                 boxShadow: isActive
                     ? '0 12px 32px rgba(9, 23, 61, 0.25)'
@@ -64,38 +67,49 @@ const MomentCard = React.memo(function MomentCard({
                 willChange: 'flex, border-radius',
             }}
         >
-            {/* Media */}
-            {isVideo ? (
-                <video src={item.src} muted loop playsInline preload="metadata"
-                    style={{
-                        position: 'absolute', inset: 0,
-                        width: '100%', height: '100%', objectFit: 'cover',
-                        objectPosition: 'center top', display: 'block',
-                        transition: 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease',
-                        transform: isActive ? 'scale(1.05)' : 'scale(1)',
-                        filter: isActive
-                            ? 'brightness(1) saturate(1.05)'
-                            : 'brightness(0.62) saturate(0.7)',
-                    }} />
-            ) : optimized ? (
-                <img src={optimized} alt={item.caption || ''} loading="lazy" decoding="async"
-                    style={{
-                        position: 'absolute', inset: 0,
-                        width: '100%', height: '100%', objectFit: 'cover',
-                        objectPosition: 'center top', display: 'block',
-                        transition: 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease',
-                        transform: isActive ? 'scale(1.05)' : 'scale(1)',
-                        filter: isActive
-                            ? 'brightness(1) saturate(1.05)'
-                            : 'brightness(0.62) saturate(0.7)',
-                    }} />
-            ) : (
+            {/* Ambient Background for Media */}
+            {(isVideo || optimized) && (
                 <div style={{
-                    position: 'absolute', inset: 0,
-                    width: '100%', height: '100%',
-                    background: `linear-gradient(135deg, ${eventColor}20, ${eventColor}35)`,
+                    position: 'absolute', inset: '-20%',
+                    background: `url(${optimized || item.thumbnail || item.src}) center/cover no-repeat`,
+                    filter: 'blur(30px) brightness(0.5) saturate(1.5)',
+                    opacity: 0.9,
                 }} />
             )}
+
+            {/* Media */}
+            <div style={{ position: 'absolute', inset: 0, padding: 'clamp(2px, 0.5vw, 6px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {isVideo ? (
+                    <video src={item.src} muted loop playsInline preload="metadata"
+                        onError={() => setHasError(true)}
+                        style={{
+                            width: '100%', height: '100%', objectFit: 'contain',
+                            display: 'block', background: 'transparent', borderRadius: '4px',
+                            transition: 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease',
+                            transform: isActive ? 'scale(1.05)' : 'scale(1)',
+                            filter: isActive
+                                ? 'brightness(1) saturate(1.05)'
+                                : 'brightness(0.62) saturate(0.7)',
+                        }} />
+                ) : optimized ? (
+                    <img src={optimized} alt={item.caption || ''} loading="lazy" decoding="async"
+                        onError={() => setHasError(true)}
+                        style={{
+                            width: '100%', height: '100%', objectFit: 'contain',
+                            display: 'block',
+                            transition: 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease',
+                            transform: isActive ? 'scale(1.05)' : 'scale(1)',
+                            filter: isActive
+                                ? 'brightness(1) saturate(1.05) drop-shadow(0 8px 16px rgba(0,0,0,0.4))'
+                                : 'brightness(0.62) saturate(0.7)',
+                        }} />
+                ) : (
+                    <div style={{
+                        width: '100%', height: '100%',
+                        background: `linear-gradient(135deg, ${eventColor}20, ${eventColor}35)`,
+                    }} />
+                )}
+            </div>
 
             {/* Gradient on active */}
             <div style={{
@@ -133,7 +147,9 @@ const MomentCard = React.memo(function MomentCard({
                     bottom: 8,
                     left: '50%',
                     transform: `translateX(-50%) translateY(${labelVisible && isActive ? 0 : 8}px)`,
-                    background: '#09173d',
+                    background: 'rgba(9, 23, 61, 0.5)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
                     color: 'white',
                     padding: 'clamp(4px, 1vw, 6px) clamp(16px, 3vw, 24px)',
                     border: '1px solid rgba(255, 255, 255, 0.15)',
@@ -253,11 +269,11 @@ export default function CapturedMoments3D({ capturedMoments, event }) {
     const row1 = capturedMoments.slice(0, mid);
     const row2 = capturedMoments.slice(mid);
 
-    // Scroll reveal
+    // Continuous visibility tracking
     useEffect(() => {
         const observer = new IntersectionObserver(
-            ([entry]) => { if (entry.isIntersecting) setIsRevealed(true); },
-            { threshold: 0.1 }
+            ([entry]) => { setIsRevealed(entry.isIntersecting); },
+            { threshold: 0.05 } // Low threshold for high reliability
         );
         if (sectionRef.current) observer.observe(sectionRef.current);
         return () => observer.disconnect();

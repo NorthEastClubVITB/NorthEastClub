@@ -35,8 +35,8 @@ const MomentSlide = React.memo(function MomentSlide({ moment, index, activeIndex
             // Perfect center alignment
             margin: 'calc(-1 * clamp(12rem, 35vw, 18rem)/2) 0 0 calc(-1 * clamp(18rem, 50vw, 30rem)/2)',
             borderRadius: 'clamp(1rem, 3vw, 1.5rem)', cursor: 'pointer',
-            // Fast, sharp transition
-            transition: 'transform 0.4s ease-out, opacity 0.4s ease-out, filter 0.4s ease-out, box-shadow 0.4s ease-out',
+            // Lazy, luxurious transition
+            transition: 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.6s ease-out, box-shadow 0.8s ease-out',
             transform: `rotateY(${angle}deg) translateZ(${zTranslate}) scale(${isActive ? 1 : 0.85})`,
             opacity: isActive ? 1 : 0.6,
             // DO NOT USE BLUR HERE - it breaks hardware 3D preserve-3d sorting!
@@ -55,9 +55,16 @@ const MomentSlide = React.memo(function MomentSlide({ moment, index, activeIndex
             onMouseEnter={isActive ? (e) => { e.currentTarget.style.transform = `rotateY(${angle}deg) translateZ(calc(${radius} + 4rem)) scale(1.02)`; e.currentTarget.style.boxShadow = '0 40px 100px rgba(9, 23, 61, 0.8), 0 0 0 1.5px rgba(255, 255, 255, 0.3) inset'; } : undefined}
             onMouseLeave={isActive ? (e) => { e.currentTarget.style.transform = `rotateY(${angle}deg) translateZ(${zTranslate}) scale(1)`; e.currentTarget.style.boxShadow = '0 30px 80px rgba(9, 23, 61, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.2) inset'; } : undefined}
         >
-            {/* Compressed image */}
+            {/* Ambient Background & Glow */}
+            <div style={{ position: 'absolute', inset: '-20%', background: `url(${optimized}) center/cover no-repeat`, filter: 'blur(30px) brightness(0.5) saturate(1.5)', opacity: 0.8 }} />
             <img src={optimized} alt={moment.caption || ''} decoding="async"
-                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                style={{ position: 'absolute', top: '10%', left: '10%', width: '80%', height: '80%', objectFit: 'contain', filter: 'blur(20px) brightness(1.2) saturate(1.5)', opacity: 0.6, transform: 'translateY(15px)' }} />
+
+            {/* Compressed image in fit mode */}
+            <div style={{ position: 'absolute', inset: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <img src={optimized} alt={moment.caption || ''} decoding="async"
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', filter: isActive ? 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))' : 'none' }} />
+            </div>
 
             {/* Glass Overlays */}
             <div style={{ position: 'absolute', inset: 0, background: isActive ? 'none' : 'rgba(9, 23, 61, 0.2)', transition: 'background 0.5s ease' }} />
@@ -88,11 +95,11 @@ const MomentSlide = React.memo(function MomentSlide({ moment, index, activeIndex
 });
 
 // ========== MOMENTS CAROUSEL (clean card-stack, no z-index issues) ==========
-export function MomentsCarousel({ capturedMoments, activeMomentIndex, setActiveMomentIndex }) {
+export function MomentsCarousel({ containerRef, capturedMoments, activeMomentIndex, setActiveMomentIndex }) {
     if (!capturedMoments || capturedMoments.length === 0) return null;
 
     return (
-        <div style={{
+        <div ref={containerRef} style={{
             padding: 'clamp(60px, 12vw, 100px) 0',
             position: 'relative',
             zIndex: 2,
@@ -292,11 +299,14 @@ function MomentLightbox({ moment, onClose, event }) {
 
 // ========== COMPRESSED MOMENT CARD FOR GRID ==========
 const OptimizedMomentCard = React.memo(function OptimizedMomentCard({ item, index, event, onClick }) {
+    const [hasError, setHasError] = useState(false);
     const isVideo = item.type === 'video';
     const displaySrc = item.thumbnail || item.src;
     const optimized = useOptimizedImage(!isVideo ? displaySrc : null, 500, 600, 0.65, false);
     const [tilt, setTilt] = useState({ x: 0, y: 0 });
     const cardRef = useRef(null);
+
+    if (hasError) return <div style={{ display: 'none' }} />;
 
     const handleMouseMove = (e) => {
         if (!window.matchMedia('(min-width: 1024px)').matches || !cardRef.current) return;
@@ -329,17 +339,38 @@ const OptimizedMomentCard = React.memo(function OptimizedMomentCard({ item, inde
                     background: '#09173d'
                 }}
             >
-                {/* Media Container */}
-                <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-                    {isVideo ? (
-                        <video src={item.src} muted loop playsInline preload="metadata"
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }}
-                            onMouseEnter={e => e.currentTarget.play()}
-                            onMouseLeave={e => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }} />
-                    ) : (
-                        <img src={optimized || displaySrc} alt=""
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.9, transition: 'transform 0.6s ease' }} />
+                {/* Media Container with Dynamic Ambient Effect */}
+                <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                    {/* Ambient Glowing Background */}
+                    {!isVideo && (
+                        <div style={{
+                            position: 'absolute', inset: '-20%', zIndex: 0,
+                            background: `url(${optimized || displaySrc}) center/cover no-repeat`,
+                            filter: 'blur(30px) brightness(0.5) saturate(1.5)',
+                            opacity: 0.9, transform: 'scale(1.1)'
+                        }} />
                     )}
+
+                    {/* Glowing Drop-Shadow beneath the image */}
+                    {!isVideo && (
+                        <img src={optimized || displaySrc} alt=""
+                            style={{ position: 'absolute', width: '90%', height: '90%', objectFit: 'contain', filter: 'blur(20px) brightness(1.2) saturate(1.5)', opacity: 0.6, transform: 'translateY(15px)', zIndex: 0 }} />
+                    )}
+
+                    {/* Main Fitted Media */}
+                    <div style={{ position: 'relative', width: '100%', height: '100%', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(4px, 1.5vw, 12px)' }}>
+                        {isVideo ? (
+                            <video src={item.src} muted loop playsInline preload="metadata"
+                                onError={() => setHasError(true)}
+                                style={{ width: '100%', height: '100%', objectFit: 'contain', opacity: 0.9, background: '#000', borderRadius: '8px' }}
+                                onMouseEnter={e => e.currentTarget.play()}
+                                onMouseLeave={e => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }} />
+                        ) : (
+                            <img src={optimized || displaySrc} alt=""
+                                onError={() => setHasError(true)}
+                                style={{ width: '100%', height: '100%', objectFit: 'contain', opacity: 1, transition: 'transform 0.6s ease', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))' }} />
+                        )}
+                    </div>
                 </div>
 
                 {/* Overlays */}
@@ -359,8 +390,13 @@ const OptimizedMomentCard = React.memo(function OptimizedMomentCard({ item, inde
                 }} />
 
                 {/* Content */}
-                <div style={{ position: 'absolute', bottom: '1.25rem', left: '1.25rem', right: '1.25rem', zIndex: 2 }}>
-                    <div style={{ fontSize: 'clamp(0.65rem, 1.5vw, 0.75rem)', color: 'white', opacity: 0.8, textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '0.5rem', fontWeight: 600 }}>
+                <div style={{
+                    position: 'absolute', bottom: '1.25rem', left: '1.25rem', right: '1.25rem', zIndex: 2,
+                    background: 'rgba(9, 23, 61, 0.4)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+                    padding: 'clamp(10px, 2vw, 16px)', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.2)',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.2)'
+                }}>
+                    <div style={{ fontSize: 'clamp(0.65rem, 1.5vw, 0.75rem)', color: 'white', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '0.25rem', fontWeight: 700 }}>
                         {item.eventTitle || 'Memory'}
                     </div>
                     <div style={{ fontSize: 'clamp(0.9rem, 2vw, 1.1rem)', color: 'white', fontWeight: 500, fontFamily: "'Playfair Display', serif", lineHeight: 1.3 }}>
@@ -445,18 +481,28 @@ export function CapturedMomentsGrid({ capturedMoments, event }) {
 // ========== REVIEWS CAROUSEL (Auto-scrolling) ==========
 export const ReviewsCarousel = ({ reviews, eventColor, fallbackText = "Joining the conversation... share your memory below!" }) => {
     const [activeIndex, setActiveIndex] = useState(0);
+    const [isVisible, setIsVisible] = useState(false);
+    const containerRef = useRef(null);
     const total = reviews?.length || 0;
 
     useEffect(() => {
-        if (total <= 1) return;
+        const observer = new IntersectionObserver(([entry]) => {
+            setIsVisible(entry.isIntersecting);
+        }, { threshold: 0.05 }); // More permissive threshold 
+        if (containerRef.current) observer.observe(containerRef.current);
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (total <= 1 || !isVisible) return;
         const timer = setInterval(() => {
             setActiveIndex((prev) => (prev + 1) % total);
         }, 5000);
         return () => clearInterval(timer);
-    }, [total]);
+    }, [total, isVisible]);
 
     return (
-        <div style={{ padding: 'clamp(30px, 6vw, 40px) 0', position: 'relative', zIndex: 2 }}>
+        <div ref={containerRef} style={{ padding: 'clamp(30px, 6vw, 40px) 0', position: 'relative', zIndex: 2 }}>
             <div style={{ maxWidth: '800px', margin: '0 auto' }}>
                 <div style={{ position: 'relative', minHeight: 'clamp(150px, 30vw, 200px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {total > 0 ? (
@@ -537,7 +583,7 @@ function CinematicVideoSection({ event }) {
             setIsInView(e.isIntersecting);
             const vid = videoRef.current;
             if (vid) { e.isIntersecting ? vid.play().catch(() => { }) : vid.pause(); }
-        }, { threshold: 0.3 });
+        }, { threshold: 0.2 });
         obs.observe(el);
         return () => obs.disconnect();
     }, []);
