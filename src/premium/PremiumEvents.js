@@ -13,6 +13,10 @@ const PremiumEvents = () => {
     const [activeTimelineCard, setActiveTimelineCard] = useState(0);
     const [showScrollTop, setShowScrollTop] = useState(false);
     const timelineRef = useRef(null);
+    const featuredRef = useRef(null);
+    const momentsRef = useRef(null);
+    const [isFeaturedVisible, setIsFeaturedVisible] = useState(false);
+    const [isMomentsVisible, setIsMomentsVisible] = useState(false);
     const scrollTimer = useRef(null);
 
     // List of folders to fetch media from
@@ -91,20 +95,43 @@ const PremiumEvents = () => {
         };
     }, []);
 
+    // Intersection Observer for Featured Carousel
     useEffect(() => {
+        if (mediaLoading) return;
+        const observer = new IntersectionObserver(([entry]) => {
+            setIsFeaturedVisible(entry.isIntersecting);
+        }, { threshold: 0.1 }); // Lower threshold for better reliability
+        if (featuredRef.current) observer.observe(featuredRef.current);
+        return () => observer.disconnect();
+    }, [mediaLoading]);
+
+    // Intersection Observer for Moments Carousel
+    useEffect(() => {
+        if (mediaLoading) return;
+        const observer = new IntersectionObserver(([entry]) => {
+            setIsMomentsVisible(entry.isIntersecting);
+        }, { threshold: 0.1 }); // Lower threshold for better reliability
+        if (momentsRef.current) observer.observe(momentsRef.current);
+        return () => observer.disconnect();
+    }, [mediaLoading]);
+
+    // Featured Carousel Auto-scroll (only if visible)
+    useEffect(() => {
+        if (!isFeaturedVisible) return;
         const interval = setInterval(() => {
             setActiveCarouselIndex((prev) => (prev + 1) % eventsData.length);
-        }, 4000);
+        }, 5000); // Slower, more "lazy" interval
         return () => clearInterval(interval);
-    }, []);
+    }, [isFeaturedVisible]);
 
+    // Moments Carousel Auto-scroll (only if visible)
     useEffect(() => {
-        if (capturedMoments.length === 0) return;
+        if (!isMomentsVisible || capturedMoments.length === 0) return;
         const interval = setInterval(() => {
             setActiveMomentIndex((prev) => (prev + 1) % capturedMoments.length);
-        }, 3500);
+        }, 4500); // Slower, more "lazy" interval
         return () => clearInterval(interval);
-    }, [capturedMoments.length]);
+    }, [isMomentsVisible, capturedMoments.length]);
 
     const [globalComments, setGlobalComments] = useState([]);
 
@@ -150,6 +177,7 @@ const PremiumEvents = () => {
             <GrainOverlay />
             <HeroSection />
             <FeaturedCarousel
+                containerRef={featuredRef}
                 events={eventsData}
                 activeCarouselIndex={activeCarouselIndex}
                 setActiveCarouselIndex={setActiveCarouselIndex}
@@ -193,6 +221,7 @@ const PremiumEvents = () => {
                         </div>
 
                         <MomentsCarousel
+                            containerRef={momentsRef}
                             capturedMoments={capturedMoments}
                             activeMomentIndex={activeMomentIndex}
                             setActiveMomentIndex={setActiveMomentIndex}

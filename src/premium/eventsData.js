@@ -26,6 +26,36 @@ const getCloudinaryVideoUrl = (folder, filename, transforms = 'f_auto,q_auto') =
 
 export const eventsData = [
     {
+        id: 'drama-on-deck',
+        folder: 'Drama_On_Deck',
+        title: "Drama On Deck",
+        date: "February 27, 2026",
+        time: "11:00 AM - 4:00 PM",
+        location: "Advitya 2025 Venue", // Often Audi or main lawn
+        attendees: "TBA",
+        description: "Lights. Camera. Drama. An immersive Bollywood experience of games, performances & music featuring DJ Night and nonstop Bollywood vibes.",
+        color: "#8B4513",
+        coverImage: "https://res.cloudinary.com/dambyonbn/image/upload/f_auto,q_auto/v1772311775/drama_poster_ry9rze.jpg",
+        heroVideo: null,
+        videoUrl: "",
+        fullDescription: "Step into a Bollywood-inspired universe where the drama is loud, the music is electrifying, and every moment feels like a title reveal. A festive, high-energy cultural event featuring spotlight moments for performers, fun interactive audience games, and photo-ready frames with neon ambience. Dress Code: Go full Bollywood—Classic cinema, modern glam, or iconic characters.",
+        highlights: [
+            "Guess the Movie from Emojis",
+            "Meme Audio Guessing",
+            "Dialogue Delivery Drama",
+            "Mimicry Challenge",
+            "Situational Acting Showdown",
+            "DJ Night & Open Mic"
+        ],
+        images: [
+            { src: "https://res.cloudinary.com/dambyonbn/image/upload/f_auto,q_auto/v1772311775/drama_poster_ry9rze.jpg", caption: 'Drama On Deck: Bollywood Days' }
+        ],
+        media: [
+            { type: 'image', src: "https://res.cloudinary.com/dambyonbn/image/upload/f_auto,q_auto/v1772311775/drama_poster_ry9rze.jpg", caption: 'Drama On Deck: Bollywood Days' }
+        ],
+        testimonials: []
+    },
+    {
         id: 'threads-of-heritage',
         folder: 'Threads_of_herit_1',
         title: "Threads of Heritage",

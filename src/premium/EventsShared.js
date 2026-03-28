@@ -43,7 +43,7 @@ function OptimizedImg({ src, alt, maxW, maxH, quality, style, ...props }) {
 }
 
 // ========== FEATURED CAROUSEL (GPU-accelerated + compressed images) ==========
-export function FeaturedCarousel({ events, activeCarouselIndex, setActiveCarouselIndex, setSelectedEvent }) {
+export function FeaturedCarousel({ containerRef, events, activeCarouselIndex, setActiveCarouselIndex, setSelectedEvent }) {
     // Cache window width in state to avoid reading DOM during render
     const [viewW, setViewW] = useState(window.innerWidth);
     useEffect(() => {
@@ -53,7 +53,7 @@ export function FeaturedCarousel({ events, activeCarouselIndex, setActiveCarouse
     }, []);
 
     return (
-        <div style={{ padding: 'clamp(3rem, 10vw, 6rem) clamp(1rem, 5vw, 2rem)', position: 'relative', zIndex: 2, overflow: 'hidden' }}>
+        <div ref={containerRef} style={{ padding: 'clamp(3rem, 10vw, 6rem) clamp(1rem, 5vw, 2rem)', position: 'relative', zIndex: 2, overflow: 'hidden' }}>
             <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 4rem)' }}>
                 <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: 400, margin: '0 0 1rem 0', color: '#09173d', fontFamily: "'Playfair Display', 'Georgia', serif" }}>Featured Highlights</h2>
                 <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)', color: '#09173d', opacity: 0.7 }}>Swipe through our most memorable events</p>
@@ -91,8 +91,8 @@ const CarouselCard = React.memo(function CarouselCard({ event, isActive, offset,
         <div onClick={onClick} style={{
             position: 'absolute', width: 'min(90vw, 36rem)', height: 'clamp(16rem, 40vw, 22rem)',
             borderRadius: 'clamp(1rem, 3vw, 1.5rem)', cursor: 'pointer',
-            /* GPU-only properties for silky transitions */
-            transition: 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease, box-shadow 0.5s ease',
+            /* GPU-only properties for silky "lazy" transitions */
+            transition: 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.8s ease',
             transform: `translate3d(${slideX}px, ${isActive ? 0 : '10%'}, ${isActive ? 0 : -200}px) rotateY(${offset * 20}deg) scale(${isActive ? 1 : 0.85})`,
             willChange: 'transform, opacity, box-shadow',
             opacity: absOffset > 1 ? 0 : 1,
@@ -107,9 +107,12 @@ const CarouselCard = React.memo(function CarouselCard({ event, isActive, offset,
             onMouseEnter={isActive ? (e) => { e.currentTarget.style.transform = `translate3d(${slideX}px, -2%, 0) scale(1.02)`; e.currentTarget.style.boxShadow = '0 30px 80px rgba(9,23,61,0.5), 0 0 0 1.5px rgba(255,255,255,0.4) inset'; } : undefined}
             onMouseLeave={isActive ? (e) => { e.currentTarget.style.transform = `translate3d(${slideX}px, 0, 0) scale(1)`; e.currentTarget.style.boxShadow = '0 25px 60px rgba(9,23,61,0.4), 0 0 0 1px rgba(255,255,255,0.2) inset'; } : undefined}
         >
-            {/* Compressed cover image */}
-            <img src={optimizedCover} alt={event.title} decoding="async"
-                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none', filter: isActive ? 'none' : 'grayscale(30%) brightness(0.8)', transition: 'filter 0.5s ease' }} />
+            {/* Compressed cover image with ambient effect */}
+            <div style={{ position: 'absolute', inset: '-20%', background: `url(${optimizedCover}) center/cover no-repeat`, filter: 'blur(30px) brightness(0.5) saturate(1.5)', opacity: 0.9 }} />
+            <div style={{ position: 'absolute', inset: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <img src={optimizedCover} alt={event.title} decoding="async"
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', pointerEvents: 'none', filter: isActive ? 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))' : 'grayscale(30%) brightness(0.8)', transition: 'filter 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)' }} />
+            </div>
             {/* Dark overlay */}
             <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to top, ${event.color}ee 0%, ${event.color}66 50%, transparent 100%)` }} />
             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', color: 'white', position: 'relative', zIndex: 2, padding: 'clamp(1.5rem, 5vw, 2rem)', justifyContent: 'flex-end', opacity: isActive ? 1 : 0.8, transition: 'opacity 0.4s' }}>
@@ -144,7 +147,7 @@ export function EventCard({ event, index, onEventClick, isActive }) {
         <div ref={cardRef} className="event-card" style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '120px', position: 'relative',
             opacity: isVisible ? 1 : 0, transform: isVisible ? 'translate3d(0,0,0)' : 'translate3d(0,50px,0)',
-            transition: `opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.2}s, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.2}s`,
+            transition: `opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1) ${index * 0.15}s, transform 1s cubic-bezier(0.2, 0.8, 0.2, 1) ${index * 0.15}s`,
             willChange: 'transform, opacity'
         }}>
             <div style={{
@@ -167,11 +170,12 @@ export function EventCard({ event, index, onEventClick, isActive }) {
             }} onClick={() => onEventClick(event)}
                 onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.transform = 'translateY(-8px) scale(1.01)'; e.currentTarget.style.boxShadow = `0 20px 60px ${event.color}15`; } }}
                 onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 10px 40px rgba(0,0,0,0.1)'; } }}>
-                {/* Compressed cover image */}
-                <div style={{ height: 'clamp(200px, 40vw, 280px)', position: 'relative', overflow: 'hidden' }}>
+                {/* Compressed cover image with ambient effect */}
+                <div style={{ height: 'clamp(200px, 40vw, 280px)', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>
+                    <div style={{ position: 'absolute', inset: '-20%', background: `url(${event.coverImage}) center/cover no-repeat`, filter: 'blur(20px) brightness(0.6) saturate(1.5)', opacity: 0.9, zIndex: 0 }} />
                     <OptimizedImg src={event.coverImage} alt={event.title} maxW={700} maxH={400} quality={0.7}
-                        loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                    <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to bottom, transparent 0%, ${event.color}aa 100%)`, display: 'flex', alignItems: 'flex-end', padding: 'clamp(20px, 4vw, 24px)' }}>
+                        loading="lazy" style={{ position: 'relative', width: '100%', height: '100%', objectFit: 'contain', display: 'block', zIndex: 1, filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.4))' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to bottom, transparent 0%, ${event.color}aa 100%)`, display: 'flex', alignItems: 'flex-end', padding: 'clamp(20px, 4vw, 24px)', zIndex: 2 }}>
                         <div style={{ display: 'inline-block', padding: '8px 20px', background: 'rgba(255,255,255,0.2)', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.3)', fontSize: 'clamp(12px, 2.5vw, 14px)', color: 'white', fontWeight: 600, letterSpacing: '1px' }}>{event.date}</div>
                     </div>
                 </div>
@@ -213,7 +217,10 @@ export function MomentCard({ image, index }) {
         }}
             onMouseEnter={(e) => { e.currentTarget.style.transform = 'translate3d(0,0,0) scale(1.05) rotate(2deg)'; e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.18)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = 'translate3d(0,0,0) scale(1) rotate(0deg)'; e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.12)'; }}>
-            <img src={optimized} alt={image.caption || ''} decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            <div style={{ position: 'absolute', inset: '-20%', background: `url(${optimized}) center/cover no-repeat`, filter: 'blur(20px) brightness(0.5) saturate(1.5)', opacity: 0.9 }} />
+            <div style={{ position: 'absolute', inset: 0, padding: 'clamp(4px, 1vw, 8px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <img src={optimized} alt={image.caption || ''} decoding="async" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.4))' }} />
+            </div>
             {/* Caption overlay on hover */}
             <div className="moment-caption" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 'clamp(12px, 3vw, 20px)', background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)', color: 'white', fontSize: 'clamp(12px, 2.5vw, 14px)', fontWeight: 600, transform: 'translateY(100%)', transition: 'transform 0.4s ease' }}>
                 {image.caption}
@@ -268,11 +275,16 @@ export function MemoryCard({ memory, index, event, tall, wide }) {
                 const v = e.currentTarget.querySelector('video');
                 if (v) v.pause();
             }}>
-            {isVideo ? (
-                <video src={memory.src} muted loop playsInline preload="metadata" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-            ) : (
-                <img src={optimized} alt={memory.caption || ''} decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            {!isVideo && (
+                <div style={{ position: 'absolute', inset: '-20%', background: `url(${optimized}) center/cover no-repeat`, filter: 'blur(30px) brightness(0.5) saturate(1.5)', opacity: 0.9 }} />
             )}
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isVideo ? 0 : 'clamp(4px, 1vw, 10px)' }}>
+                {isVideo ? (
+                    <video src={memory.src} muted loop playsInline preload="metadata" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#000', borderRadius: '4px' }} />
+                ) : (
+                    <img src={optimized} alt={memory.caption || ''} decoding="async" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))' }} />
+                )}
+            </div>
             {/* Play icon overlay for videos */}
             {isVideo && (
                 <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 'clamp(40px, 8vw, 56px)', height: 'clamp(40px, 8vw, 56px)', borderRadius: '50%', background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', transition: 'opacity 0.3s ease' }}>
